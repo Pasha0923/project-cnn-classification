@@ -4,10 +4,17 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 from models.cnn_model import CIFAR10ResNet
-from cifar10_loader import get_dataloaders
+from training.cifar10_loader import get_dataloaders
 from configuration.config import *
+from tqdm import tqdm
+# import sys
+# import os
 
-
+# sys.path.append(
+#     os.path.abspath(
+#         os.path.join(os.path.dirname(__file__), "..")
+#     )
+# )
 # Load datasets
 train_loader, val_loader, test_loader = get_dataloaders(BATCH_SIZE)
 
@@ -54,8 +61,8 @@ for epoch in range(EPOCHS):
     correct = 0
     total = 0
 
-    for images, labels in train_loader:
-
+    # for images, labels in train_loader:
+    for images, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{EPOCHS} [Train]"):
         images = images.to(DEVICE)
         labels = labels.to(DEVICE)
 
@@ -101,8 +108,8 @@ for epoch in range(EPOCHS):
 
     with torch.no_grad():
 
-        for images, labels in val_loader:
-
+        # for images, labels in val_loader:
+        for images, labels in tqdm(val_loader, desc=f"Epoch {epoch+1}/{EPOCHS} [Val]"):
             images = images.to(DEVICE)
             labels = labels.to(DEVICE)
 

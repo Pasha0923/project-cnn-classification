@@ -30,7 +30,7 @@ _, _, test_loader = get_dataloaders(
 model = CIFAR10ResNet().to(DEVICE)
 
 model.load_state_dict(
-    torch.load(MODEL_PATH)
+    torch.load(MODEL_PATH, map_location=DEVICE)
 )
 
 model.eval()

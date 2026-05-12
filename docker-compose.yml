@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+
+  cifar10-app:
+
+    build: .
+
+    ports:
+      - "8501:8501"
+
+    container_name: cifar10-streamlit

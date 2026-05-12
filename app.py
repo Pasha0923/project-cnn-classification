@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import torch
 import json
@@ -5,8 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from torchvision import transforms
-
 from models.cnn_model import CIFAR10ResNet
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "best_model_2.pth")
+HISTORY_PATH = os.path.join(BASE_DIR, "outputs", "history.json")
 
 st.set_page_config(
     page_title="CIFAR-10 Classifier",
@@ -29,13 +33,14 @@ transform = transforms.Compose([
     )
 ])
 
+
 # load model
 
 @st.cache_resource
 def load_model():
     model = CIFAR10ResNet()
     model.load_state_dict(
-        torch.load("models/best_model_2.pth", map_location="cpu")
+        torch.load(MODEL_PATH, map_location="cpu")
     )
     model.eval()
     return model
@@ -119,7 +124,7 @@ if show_curves:
     st.subheader("📈 Training Curves")
 
     try:
-        with open("outputs/history.json", "r") as f:
+        with open(HISTORY_PATH, "r") as f:
             history = json.load(f)
 
         # LOSS

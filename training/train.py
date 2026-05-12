@@ -1,18 +1,17 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+import json
+import os
 from models.cnn_model import CIFAR10ResNet
 from training.cifar10_loader import get_dataloaders
 from configuration.config import *
 from tqdm import tqdm
-import json
-import os
 
-# ================= DATA =================
+
 train_loader, val_loader, test_loader = get_dataloaders(BATCH_SIZE)
 
-# ================= MODEL =================
+# model
 model = CIFAR10ResNet().to(DEVICE)
 
 criterion = nn.CrossEntropyLoss()
@@ -30,7 +29,7 @@ scheduler = optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5
 )
 
-# ================= METRICS =================
+# metrics
 train_losses = []
 val_losses = []
 
@@ -43,10 +42,10 @@ early_stopping_patience = 5
 
 os.makedirs("outputs", exist_ok=True)
 
-# ================= TRAINING =================
+# training
 for epoch in range(EPOCHS):
 
-    # ---------- TRAIN ----------
+   
     model.train()
 
     running_loss = 0
@@ -77,7 +76,7 @@ for epoch in range(EPOCHS):
     train_losses.append(epoch_train_loss)
     train_accuracies.append(epoch_train_acc)
 
-    # ---------- VALIDATION ----------
+    # validation
     model.eval()
 
     val_running_loss = 0
@@ -112,7 +111,7 @@ for epoch in range(EPOCHS):
         f"[VAL] Loss: {epoch_val_loss:.4f} | Acc: {epoch_val_acc:.2f}%"
     )
 
-    # ---------- SAVE BEST MODEL ----------
+    #  save best model
     if epoch_val_acc > best_accuracy:
         best_accuracy = epoch_val_acc
         torch.save(model.state_dict(), MODEL_PATH)
@@ -121,12 +120,12 @@ for epoch in range(EPOCHS):
     else:
         patience_counter += 1
 
-    # ---------- EARLY STOPPING ----------
+    #  early stopping
     if patience_counter >= early_stopping_patience:
         print("Early stopping triggered")
         break
 
-# ================= SAVE HISTORY =================
+# save training history
 history = {
     "train_losses": train_losses,
     "val_losses": val_losses,

@@ -1,10 +1,11 @@
 # project-cnn-classification
 
-## 📌 Project Description
+## 📌 Overview
 This project is a deep learning-based image classification system for the CIFAR-10 dataset.
 It classifies input images into one of 10 categories using a fine-tuned ResNet18 convolutional neural network.
 
-## Project includes:
+ Project includes:
+
 - model training and evaluation
 - performance visualization
 - interactive Streamlit web application for inference
@@ -48,20 +49,23 @@ project-cnn-classification/
 
 ## **Dataset**
 The project uses the CIFAR-10 dataset, which contains 60,000 32×32 RGB images across 10 classes.
+The model was trained on the CIFAR-10 dataset from Kaggle: https://www.kaggle.com/c/cifar-10
 
 The dataset is automatically downloaded using PyTorch:
 ```bash
 datasets.CIFAR10(root="data/raw", download=True)
 ```
-Dataset contains 10 classes:
-airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
+Dataset contains 10 classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
+
+The trained weights are included in the repository:
+models/best_model_2.pth
 
 ## **Model Architecture**
-Base model: ResNet18 (pretrained on ImageNet)
-Transfer Learning strategy:
-replaced final fully connected layer
-adapted output layer to 10 classes
-fine-tuned all layers
+- Base model: ResNet18 (pretrained on ImageNet)
+- Transfer Learning strategy:
+1. replaced final fully connected layer
+2. adapted output layer to 10 classes
+3. fine-tuned all layers
 
 ## 📦 Libraries
 Python 3.11
@@ -74,14 +78,6 @@ Python 3.11
 - streamlit
 - tqdm
 - scikit-learn
-
-## **Parametres model**
-| Parameter | Value |
-|--------|-------|
-| BATCH_SIZE | 32 |
-| LEARNING_RATE | 0.0001 |
-| EPOCHS | 10 |
-| early_stopping_patience | 5 |
 
 ## Notebook (demo.ipynb)
 The demo.ipynb notebook contains:
@@ -107,8 +103,17 @@ The demo.ipynb notebook contains:
 The model demonstrates strong generalization ability with high classification performance across all 10 CIFAR-10 classes.  
 The near-perfect ROC-AUC indicates excellent separability between classes in a one-vs-rest setting.
 
+## ⚙️ **Model Training Configuration**
+| Parameter | Value |
+|--------|-------|
+| BATCH_SIZE | 32 |
+| LEARNING_RATE | 0.0001 |
+| EPOCHS | 10 |
+| Optimizer | Adam |
+| Loss Function | CrossEntropyLoss |
+| early_stopping_patience | 5 |
 
-## ⚡ Local Installation Setup
+## ⚡ Local Installation 
 
 1. **Clone the repository:**
 ```bash
@@ -128,7 +133,7 @@ pip install torch==2.5.1+cpu torchvision==0.20.1+cpu --index-url https://downloa
 streamlit run app.py
 ```
 
-## Run with Docker
+## 🐳 Installation with Docker
 
 1. **Clone the repository:**
 ```bash
@@ -143,8 +148,7 @@ docker compose up --build
 ```bash
 http://localhost:8501
 ```
-
-🐳 Docker Notes
+## Docker Notes
 - Uses CPU-only PyTorch build
 - No CUDA dependencies required
 - Fully reproducible environment

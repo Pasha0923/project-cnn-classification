@@ -40,8 +40,12 @@ transform = transforms.Compose([
 def load_model():
     model = CIFAR10ResNet()
     model.load_state_dict(
-        torch.load(MODEL_PATH, map_location="cpu")
+    torch.load(
+        MODEL_PATH,
+        map_location="cpu",
+        weights_only=True
     )
+)
     model.eval()
     return model
 
@@ -76,7 +80,7 @@ if uploaded_file is not None:
 
     image = Image.open(uploaded_file)
 
-    st.image(image, caption="Uploaded Image", use_container_width=True)
+    st.image(image, caption="Uploaded Image", width="stretch")
 
     if st.button("Predict 🚀"):
 

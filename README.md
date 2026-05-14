@@ -113,6 +113,16 @@ The near-perfect ROC-AUC indicates excellent separability between classes in a o
 | Loss Function | CrossEntropyLoss |
 | early_stopping_patience | 5 |
 
+## 📊 Streamlit Application
+The app allows:
+
+- image upload (JPG/PNG/JPEG)
+- real-time classification
+- prediction confidence display
+- top-3 predictions
+- probability bar chart visualization
+- model information sidebar
+
 ## ⚡ Local Installation 
 
 1. **Clone the repository:**
@@ -120,11 +130,16 @@ The near-perfect ROC-AUC indicates excellent separability between classes in a o
 git clone https://github.com/Pasha0923/project-cnn-classification.git
 cd project-cnn-classification
 ```
-2. **Install dependencies:**
+2. **Create virtual environment (recommended)**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+3. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
-3. **Install PyTorch CPU versions:**
+4. **Install PyTorch CPU versions:**
 ```bash
 pip install torch==2.5.1+cpu torchvision==0.20.1+cpu --index-url https://download.pytorch.org/whl/cpu
 ```
@@ -154,12 +169,7 @@ http://localhost:8501
 - Fully reproducible environment
 - Streamlit runs inside container
 
-## 📊 Streamlit Application
-The app allows:
+## 📌 **Contacts**
 
-- image upload (JPG/PNG/JPEG)
-- real-time classification
-- prediction confidence display
-- top-3 predictions
-- probability bar chart visualization
-- model information sidebar
+ - GitHub Repository : https://github.com/Pasha0923/project-cnn-classification
+ - email : pavelsai2309@gmail.com

@@ -1,50 +1,50 @@
-# project-cnn-classification
+# PROJECT-CNN-CLASSIFICATION-IMAGE
 
 ## 📌 Overview
 This project is a deep learning-based image classification system for the CIFAR-10 dataset.
 It classifies input images into one of 10 categories using a fine-tuned ResNet18 convolutional neural network.
 
- Project includes:
-
-- model training and evaluation
-- performance visualization
+ The Project includes:
+- deep learning image classification using ResNet18
+- model training and evaluation pipeline
+- performance visualization and analysis
 - interactive Streamlit web application for inference
 - Dockerized deployment for reproducibility
 
 ## 🎯 Project Goal
 The main goal of this project is to build a high-accuracy image classifier using deep learning techniques, specifically:
-- leverage a pretrained ResNet18 model
-- apply transfer learning (fine-tuning)
-- achieve strong generalization on CIFAR-10 dataset
-- provide a user-friendly interface for predictions
+- leveraging a pretrained ResNet18 model
+- applying transfer learning and fine-tuning
+- achieving strong generalization on CIFAR-10 dataset
+- providing a user-friendly interface for predictions
 
 ## 🗂️ Project Structure
 ```bash
 project-cnn-classification/
 │
 ├── notebook/
-│   └── demo.ipynb
+│   └── demo.ipynb       # pipeline demonstration 
 │
-├── configuration/
+├── configuration/       # project parametres
 │   └── config.py
 │
-├── models/
+├── models/              # ResNet18 model architecture
 │   ├── cnn_model.py
-│   └── best_model_2.pth
+│   └── best_model_2.pth # trained model weights
 │
 ├── training/
-│   ├── cifar10_loader.py
-│   ├── train.py
-│   └── evaluate.py
+│   ├── cifar10_loader.py # dataset loading and preprocessing
+│   ├── train.py          # model training pipeline
+│   └── evaluate.py       # evaluation metrics and testing
 │
 ├── outputs/
-│   └── history.json
+│   └── history.json     # saved training history (loss/accuracy)
 ├── .gitignore
-├── app.py
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
+├── app.py               # streamlit web application
+├── requirements.txt     # dependencies
+├── Dockerfile           # Docker image configuration
+├── docker-compose.yml   # Docker Compose setup
+└── README.md            # project documentation
 ```
 
 ## **Dataset**

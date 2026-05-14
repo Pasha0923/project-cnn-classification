@@ -1,7 +1,7 @@
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 
-
+# Resize CIFAR-10 images from 32x32 to 224x224 , ResNet18 expects larger input images
 train_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
@@ -19,8 +19,6 @@ train_transform = transforms.Compose([
     )
 ])
 
-
-
 val_test_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -30,24 +28,22 @@ val_test_transform = transforms.Compose([
     )
 ])
 
-
-
 def get_dataloaders(batch_size):
-
+# dowmnload CIFAR-10 train dataset
     full_train_dataset = datasets.CIFAR10(
         root='data/raw',
         train=True,
         download=True,
         transform=train_transform
     )
-
+# download CIFAR-10 test dataset 
     test_dataset = datasets.CIFAR10(
         root='data/raw',
         train=False,
         download=True,
         transform=val_test_transform
     )
-
+# Split the original training dataset into new training and validation datasets
     train_size = int(0.8 * len(full_train_dataset))
     val_size = len(full_train_dataset) - train_size
 

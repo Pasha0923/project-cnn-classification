@@ -5,8 +5,7 @@ class CIFAR10ResNet(nn.Module):
     def __init__(self):
         super(CIFAR10ResNet, self).__init__()
 
-        self.model = resnet18(weights=None)
-
+        self.model = resnet18(weights=None) # before training weights="DEFAULT"
         # Fine-Tuning
         for param in self.model.parameters():
             param.requires_grad = True

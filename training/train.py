@@ -14,9 +14,7 @@ train_loader, val_loader, test_loader = get_dataloaders(BATCH_SIZE)
 # Initialize model
 model = CIFAR10ResNet().to(DEVICE)
 # Loss function 
-criterion = nn.CrossEntropyLoss(
-    label_smoothing=0.1
-)
+criterion = nn.CrossEntropyLoss()
 
 # Optimizer with L2 regularization
 optimizer = optim.AdamW(

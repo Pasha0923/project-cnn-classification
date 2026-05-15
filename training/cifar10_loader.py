@@ -3,18 +3,22 @@ from torch.utils.data import DataLoader, random_split , Subset
 
 # Resize CIFAR-10 images from 32x32 to 224x224 , ResNet18 expects larger input images
 train_transform = transforms.Compose([
-
     transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
-    transforms.RandomResizedCrop(224,scale=(0.8, 1.0)),
-    transforms.AutoAugment(policy=transforms.AutoAugmentPolicy.CIFAR10),
-
+    transforms.RandomRotation(10),
+    transforms.RandomCrop(224, padding=4),
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2
+    ),
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
     )
 ])
+
 val_test_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),

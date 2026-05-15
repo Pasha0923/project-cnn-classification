@@ -2,34 +2,19 @@ import torch.nn as nn
 from torchvision.models import resnet18
 
 class CIFAR10ResNet(nn.Module):
-
     def __init__(self):
-
         super(CIFAR10ResNet, self).__init__()
 
-        # Load pretrained ResNet18
         self.model = resnet18(weights="DEFAULT") # before training weights="DEFAULT"
-
-        # Freeze all pretrained layers
+        # Fine-Tuning
         for param in self.model.parameters():
-            param.requires_grad = False
-
-        # Unfreeze last ResNet block (layer4) for fine-tuning
-        for param in self.model.layer4.parameters():
             param.requires_grad = True
 
-        # Replace classifier for CIFAR-10
+        # Replace classifier
         self.model.fc = nn.Sequential(
             nn.Dropout(0.3),
-            nn.Linear(
-                self.model.fc.in_features,
-                10
-            )
+            nn.Linear(self.model.fc.in_features, 10)
         )
 
     def forward(self, x):
         return self.model(x)
-
-
-
-    

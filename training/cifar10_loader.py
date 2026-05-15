@@ -1,79 +1,134 @@
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader, Subset
+import numpy as np
+from sklearn.model_selection import train_test_split
 
-# Resize CIFAR-10 images from 32x32 to 224x224 , ResNet18 expects larger input images
+# =========================================================
+# TRANSFORMS
+# =========================================================
+
 train_transform = transforms.Compose([
     transforms.Resize((224, 224)),
+
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
     transforms.RandomCrop(224, padding=4),
+
     transforms.ColorJitter(
         brightness=0.2,
         contrast=0.2,
         saturation=0.2
     ),
+
     transforms.ToTensor(),
+
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
     )
 ])
 
-val_test_transform = transforms.Compose([
+val_transform = transforms.Compose([
     transforms.Resize((224, 224)),
+
     transforms.ToTensor(),
+
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
     )
 ])
+
+
+# =========================================================
+# DATA LOADER
+# =========================================================
 
 def get_dataloaders(batch_size):
-# dowmnload CIFAR-10 train dataset
-    full_train_dataset = datasets.CIFAR10(
+
+    # -----------------------------------------------------
+    # Load base dataset ONLY ONCE
+    # -----------------------------------------------------
+    base_dataset = datasets.CIFAR10(
         root='data/raw',
         train=True,
-        download=True,
-        transform=train_transform
+        download=True
     )
-# download CIFAR-10 test dataset 
+
+    targets = np.array(base_dataset.targets)
+    indices = np.arange(len(base_dataset))
+
+    # -----------------------------------------------------
+    # CLEAN TRAIN/VAL SPLIT (reproducible)
+    # -----------------------------------------------------
+    train_idx, val_idx = train_test_split(
+        indices,
+        test_size=0.2,
+        random_state=42,
+        stratify=targets
+    )
+
+    # -----------------------------------------------------
+    # TRAIN DATASET (with augmentation)
+    # -----------------------------------------------------
+    train_dataset = Subset(
+        datasets.CIFAR10(
+            root='data/raw',
+            train=True,
+            download=False,
+            transform=train_transform
+        ),
+        train_idx
+    )
+
+    # -----------------------------------------------------
+    # VAL DATASET (NO augmentation)
+    # -----------------------------------------------------
+    val_dataset = Subset(
+        datasets.CIFAR10(
+            root='data/raw',
+            train=True,
+            download=False,
+            transform=val_transform
+        ),
+        val_idx
+    )
+
+    # -----------------------------------------------------
+    # TEST DATASET
+    # -----------------------------------------------------
     test_dataset = datasets.CIFAR10(
         root='data/raw',
         train=False,
         download=True,
-        transform=val_test_transform
-    )
-# Split the original training dataset into new training and validation datasets
-    train_size = int(0.8 * len(full_train_dataset))
-    val_size = len(full_train_dataset) - train_size
-
-    train_dataset, val_dataset = random_split(
-        full_train_dataset,
-        [train_size, val_size]
+        transform=val_transform
     )
 
-    # Validation should not use augmentation
-    val_dataset.dataset.transform = val_test_transform
-
+    # -----------------------------------------------------
+    # DATALOADERS
+    # -----------------------------------------------------
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
-        num_workers=2
+        num_workers=4,
+        pin_memory=True
     )
 
     val_loader = DataLoader(
         val_dataset,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=2
+        num_workers=4,
+        pin_memory=True
     )
 
     test_loader = DataLoader(
         test_dataset,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=2
+        num_workers=4,
+        pin_memory=True
     )
 
     return train_loader, val_loader, test_loader

@@ -38,8 +38,9 @@ train_accuracies = []
 val_accuracies = []
 
 best_accuracy = 0
+best_loss = float("inf")
 patience_counter = 0
-early_stopping_patience = 5
+early_stopping_patience = 4
 
 os.makedirs("outputs", exist_ok=True)
 
@@ -112,16 +113,20 @@ for epoch in range(EPOCHS):
         f"[VAL] Loss: {epoch_val_loss:.4f} | Acc: {epoch_val_acc:.2f}%"
     )
 
-    #  save best model
+    
+    # save best model by accuracy
     if epoch_val_acc > best_accuracy:
         best_accuracy = epoch_val_acc
         torch.save(model.state_dict(), MODEL_PATH)
+        print("Best model saved (by accuracy)")
+
+    # early stopping (ПО LOSS — ДОБАВЛЯЕМ НОВУЮ ЛОГИКУ)
+    if epoch_val_loss < best_loss:
+        best_loss = epoch_val_loss
         patience_counter = 0
-        print("Best model saved")
     else:
         patience_counter += 1
-
-    #  early stopping
+    # stop condition
     if patience_counter >= early_stopping_patience:
         print("Early stopping triggered")
         break

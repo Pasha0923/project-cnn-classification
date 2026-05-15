@@ -118,9 +118,9 @@ for epoch in range(EPOCHS):
     if epoch_val_acc > best_accuracy:
         best_accuracy = epoch_val_acc
         torch.save(model.state_dict(), MODEL_PATH)
-        print("Best model saved (by accuracy)")
+        print("Best model saved")
 
-    # early stopping (ПО LOSS — ДОБАВЛЯЕМ НОВУЮ ЛОГИКУ)
+    # early stopping
     if epoch_val_loss < best_loss:
         best_loss = epoch_val_loss
         patience_counter = 0

@@ -3,17 +3,11 @@ from torch.utils.data import DataLoader, Subset
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-# =========================================================
-# TRANSFORMS
-# =========================================================
-
 train_transform = transforms.Compose([
     transforms.Resize((224, 224)),
-
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
     transforms.RandomCrop(224, padding=4),
-
     transforms.ColorJitter(
         brightness=0.2,
         contrast=0.2,
@@ -21,7 +15,6 @@ train_transform = transforms.Compose([
     ),
 
     transforms.ToTensor(),
-
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
@@ -30,37 +23,27 @@ train_transform = transforms.Compose([
 
 val_transform = transforms.Compose([
     transforms.Resize((224, 224)),
-
     transforms.ToTensor(),
-
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
         std=[0.229, 0.224, 0.225]
     )
 ])
 
-
-# =========================================================
-# DATA LOADER
-# =========================================================
-
 def get_dataloaders(batch_size):
 
-    # -----------------------------------------------------
-    # Load base dataset ONLY ONCE
-    # -----------------------------------------------------
+    # Load base dataset 
     base_dataset = datasets.CIFAR10(
         root='data/raw',
         train=True,
         download=True
     )
-
+    # Extract targets and indices for stratified split
     targets = np.array(base_dataset.targets)
     indices = np.arange(len(base_dataset))
 
-    # -----------------------------------------------------
-    # CLEAN TRAIN/VAL SPLIT (reproducible)
-    # -----------------------------------------------------
+    
+    # train-val split (stratified)
     train_idx, val_idx = train_test_split(
         indices,
         test_size=0.2,
@@ -68,9 +51,7 @@ def get_dataloaders(batch_size):
         stratify=targets
     )
 
-    # -----------------------------------------------------
-    # TRAIN DATASET (with augmentation)
-    # -----------------------------------------------------
+    # Train dataset (with augmentation)
     train_dataset = Subset(
         datasets.CIFAR10(
             root='data/raw',
@@ -81,9 +62,8 @@ def get_dataloaders(batch_size):
         train_idx
     )
 
-    # -----------------------------------------------------
-    # VAL DATASET (NO augmentation)
-    # -----------------------------------------------------
+    
+    # Val dataset (NO augmentation)
     val_dataset = Subset(
         datasets.CIFAR10(
             root='data/raw',
@@ -94,9 +74,7 @@ def get_dataloaders(batch_size):
         val_idx
     )
 
-    # -----------------------------------------------------
-    # TEST DATASET
-    # -----------------------------------------------------
+    # Test dataset
     test_dataset = datasets.CIFAR10(
         root='data/raw',
         train=False,
@@ -104,9 +82,8 @@ def get_dataloaders(batch_size):
         transform=val_transform
     )
 
-    # -----------------------------------------------------
-    # DATALOADERS
-    # -----------------------------------------------------
+    
+    # Dataloaders
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,

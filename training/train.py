@@ -11,12 +11,15 @@ from tqdm import tqdm
 
 train_loader, val_loader, test_loader = get_dataloaders(BATCH_SIZE)
 
-# model
+# Initialize model
 model = CIFAR10ResNet().to(DEVICE)
+# Loss function 
+criterion = nn.CrossEntropyLoss(
+    label_smoothing=0.1
+)
 
-criterion = nn.CrossEntropyLoss()
-
-optimizer = optim.Adam(
+# Optimizer with L2 regularization
+optimizer = optim.AdamW(
     model.parameters(),
     lr=LEARNING_RATE,
     weight_decay=1e-4
